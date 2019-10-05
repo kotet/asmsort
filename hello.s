@@ -4,15 +4,15 @@
 main:
     push rbp
     mov rbp, rsp
-
-    mov rax, 12345678
+mainloop:
+    call getint
     call putint
-
     dec rsp
     mov byte ptr [rsp], 0x0A
     mov rax, rsp
     mov rbx, 1
     call putstr
+    jmp mainloop
 
     mov rsp, rbp
     pop rbp
