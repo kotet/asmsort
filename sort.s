@@ -1,50 +1,48 @@
-.intel_syntax noprefix
 .global main
-.global input_loop_exit
 
 main:
-    push rbp
-    mov rbp, rsp
+    push %rbp
+    mov %rsp, %rbp
 
     call getint # array length
-    mov rbx, rax
+    mov %rax, %rbx
 
-    mov r8, 8
-    mul r8
-    sub rsp, rax # allocate array
-    mov r8, 0 # counter
+    movq $8, %r8
+    mul %r8
+    sub %rax, %rsp # allocate array
+    movq $0, %r8 # counter
 input_loop_cond:
-    cmp r8, rbx
+    cmp %rbx, %r8
     jb input_loop_body
     jmp input_loop_exit
 input_loop_body:
     call getint
-    mov qword ptr[rsp+8*r8], rax
+    movq %rax, (%rsp,%r8,8)
 
-    inc r8
+    inc %r8
     jmp input_loop_cond
 input_loop_exit:
 
-    mov rax, rsp
+    mov %rsp, %rax
     call sort
 
-    mov r8, 0 # counter
+    movq $0, %r8 # counter
 output_loop_cond:
-    cmp r8, rbx
+    cmp %rbx, %r8
     jb output_loop_body
     jmp output_loop_exit
 output_loop_body:
-    mov rax, qword ptr[rsp+8*r8]
+    movq (%rsp,%r8,8), %rax
     call putint
-    mov rax, 0x20 # space
+    movq $0x20, %rax # space
     call putc
 
-    inc r8
+    inc %r8
     jmp output_loop_cond
 output_loop_exit:
-    mov rax, 0x0A # line feed
+    movq $0x0A, %rax # line feed
     call putc
-    mov rsp, rbp
-    pop rbp
-    mov rax, 0
+    mov %rbp, %rsp
+    pop %rbp
+    movq $0, %rax
     ret
